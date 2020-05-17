@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+	<script>
+		var response = "";
+		
+		function login(){
+			var credentials = new Object();
+ 
+			
+			credentials.username = document.getElementById("username").value;
+			credentials.password = document.getElementById("password").value;
+			
+			var request = new XMLHttpRequest();
+			
+			request.open("POST", "/loginByDB", true);
+			request.setRequestHeader("Content-Type", "application/json" );
+			request.onload = function(){
+				response = JSON.parse(request.responseText);
+				if (response.message == "1"){
+                    fetchProfileID();
+					//window.location = "main.html?username=" + credentials.username + "&AccountID=" + hi_id;
+                    console.log(credentials.username);
+                    console.log(hi_id);
+                }
+				else{
+					window.alert("Incorrect username or password!")
+					document.getElementById("loginForm").reset();}
+			};
+			
+			request.send(JSON.stringify(credentials));
+        
+        function fetchProfileID() {
+            var request = new XMLHttpRequest();
+
+            request.open('GET', getusers, true);
+
+            //This command starts the calling of the comments api
+            request.onload = function() {
+            //get all the comments records into our comments array
+            getusers_array = JSON.parse(request.responseText);
+
+            showID();
+            };
+
+            request.send();
+        }
+
+
+        function showID(element) {
+            
+            var movieCount = 0;
+            var message = "";
+           
+           
+            totalUsers = getusers_array.length;
+
+
+            for (var count = 0; count < totalUsers; count++) {
+                if (getusers_array[count].Username == credentials.username) {
+                    var hi_id = getusers_array[count].AccountID;
+                    console.log(hi_id);
+                    window.location = "main.html?username=" + credentials.username + "&AccountID=" + hi_id;
+                    
+                }
+            };
+        }
+        }
+		
+	</script>
+	<link rel="stylesheet" href="css/mystyle.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+	
+<script src="js/profile.js"></script>
+<script src="js/criticreview.js"></script>
+<script src="js/comments-viewonly.js"></script>
+<script src="js/app.js"></script>
+<script src="js/movies.js"></script>
+<meta charset="utf-8">
+<title>login</title>
+</head>
+
+<body class="nofade">
+	<div class="parallax">
+	<div w3-include-html="top-navigation-login.html"></div>
+	<div class="login">
+	<form id="loginForm">
+		<h2 style="text-align: center; font-weight: bold;">Login</h2>
+	<table>
+		
+			
+		<tr>
+		<td>
+		<label>Username: </label>
+			</td>
+			<td>
+			<input style="margin-left: 5px" type="text" id="username" name="Username" autocomplete="off">
+			<br>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			<label>Password: </label>
+			</td>
+			<td>
+			<input type="password" id="password" name="Password">
+			</td>
+		</tr>
+		<tr>
+			<td>
+		<input type="button" onClick="login()" value="Submit">
+				</td>
+		</tr>
+		</table>
+	</form>
+	<div id="message"></div>
+	</div>
+		<br><br>
+	</div>
+	<div class="push"></div>
+</body>
+<footer>
+	<div w3-include-html="footer.html"></div>
+</footer>
+	
+	<script src="js/w3.js"></script>
+<script>
+        //to bring in other HTML on the fly into this page
+        w3.includeHTML();
+</script>
+</html>
